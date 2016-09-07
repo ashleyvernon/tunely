@@ -59,6 +59,13 @@ $(document).ready(function() {
     });
     $(this).trigger('reset');
   })
+
+  $('#albums').on('click', '.add-song', function(e) {
+    var id = $(this).closest('.album').data('album-id');
+    $('#songModal').data('album-id', id);
+    console.log(id);
+  });
+
 });
 
 
