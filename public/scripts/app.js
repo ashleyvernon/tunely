@@ -4,65 +4,71 @@
  * into functions and objects as needed.
  *
  */
-var $album;
 
 /* hard-coded data! */
-var sampleAlbums = [];
-sampleAlbums.push({
-             artistName: 'Ladyhawke',
-             name: 'Ladyhawke',
-             releaseDate: '2008, November 18',
-             genres: [ 'new wave', 'indie rock', 'synth pop' ]
-           });
-sampleAlbums.push({
-             artistName: 'The Knife',
-             name: 'Silent Shout',
-             releaseDate: '2006, February 17',
-             genres: [ 'synth pop', 'electronica', 'experimental' ]
-           });
-sampleAlbums.push({
-             artistName: 'Juno Reactor',
-             name: 'Shango',
-             releaseDate: '2000, October 9',
-             genres: [ 'electronic', 'goa trance', 'tribal house' ]
-           });
-sampleAlbums.push({
-             artistName: 'Philip Wesley',
-             name: 'Dark Night of the Soul',
-             releaseDate: '2008, September 12',
-             genres: [ 'piano' ]
-           });
+// var sampleAlbums = [];
+// sampleAlbums.push({
+//              artistName: 'Ladyhawke',
+//              name: 'Ladyhawke',
+//              releaseDate: '2008, November 18',
+//              genres: [ 'new wave', 'indie rock', 'synth pop' ]
+//            });
+// sampleAlbums.push({
+//              artistName: 'The Knife',
+//              name: 'Silent Shout',
+//              releaseDate: '2006, February 17',
+//              genres: [ 'synth pop', 'electronica', 'experimental' ]
+//            });
+// sampleAlbums.push({
+//              artistName: 'Juno Reactor',
+//              name: 'Shango',
+//              releaseDate: '2000, October 9',
+//              genres: [ 'electronic', 'goa trance', 'tribal house' ]
+//            });
+// sampleAlbums.push({
+//              artistName: 'Philip Wesley',
+//              name: 'Dark Night of the Soul',
+//              releaseDate: '2008, September 12',
+//              genres: [ 'piano' ]
+//            });
 /* end of hard-coded data */
 
 
-
-
 $(document).ready(function() {
+
   console.log('app.js loaded!');
 
-  $album = $('#albums');
+  // $.ajax({
+  //   method: 'GET',
+  //   url: '/api/albums',
+  //   success: renderMultipleAlbums
+  // });
+  $.get('/api/albums').success(function(albums){
+    albums.forEach(function(album) {
+      renderAlbum(album);
+    });
+    console.log(albums);
+  });
 
-  var source = $('#album-template').html();
-  var template = Handlebars.compile(source);
+  $('#new-album-form').submit(function(event){
+    event.preventDefault();
 
- 
-
-
-  function renderAlbum(album) {
-    // console.log('rendering album:', album);
-    // $album.empty();
-    var albumsHtml = template({ albums: sampleAlbums[0] });
-    $album.append(albumsHtml);
-    console.log(sampleAlbums);
-  };
-
-  renderAlbum(albums);
-
+    var data = $('#new-album-form').serialize();
+    $.post('/api/albums', data, function(album){
+      renderAlbum(album);
+    });
+    $(this).trigger('reset');
+  })
 });
 
 
-
-
+function renderAlbum(album) {
+  // $album.empty();
+  var source = $('#album-template').html();
+  var albumsTemplate = Handlebars.compile(source);
+  var html = albumsTemplate(album);
+  $('#albums').prepend(html);
+};
 
 // this function takes a single album and renders it to the page
 
