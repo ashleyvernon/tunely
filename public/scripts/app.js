@@ -38,11 +38,6 @@ $(document).ready(function() {
 
   console.log('app.js loaded!');
 
-  // $.ajax({
-  //   method: 'GET',
-  //   url: '/api/albums',
-  //   success: renderMultipleAlbums
-  // });
   $.get('/api/albums').success(function(albums){
     albums.forEach(function(album) {
       renderAlbum(album);
@@ -60,11 +55,14 @@ $(document).ready(function() {
     $(this).trigger('reset');
   })
 
-  $('#albums').on('click', '.add-song', function(e) {
+  $('#albums').on('click', '.add-song', function(e)
+   {
+    e.preventDefault();
     var id = $(this).closest('.album').data('album-id');
     $('#songModal').data('album-id', id);
-    console.log(id);
+    $('#songModal').modal();
   });
+
 
 });
 
